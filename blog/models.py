@@ -33,6 +33,8 @@ class Product(models.Model):
     )
     image = models.ImageField(upload_to='products/', verbose_name="Asosiy rasmi")
     is_available = models.BooleanField(default=True, verbose_name="Mavjudmi?")
+    is_popular = models.BooleanField(default=False, verbose_name="Mashhurmi?")
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Yaratilgan vaqti")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Yangilangan vaqti")
 
