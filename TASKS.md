@@ -5,13 +5,22 @@ shablondagi qo'lda yozilgan 8 ta kartochka chiqyapti. Endi ularni bazadan chiqar
 
 Tartib bilan qil. Har bir qismdan keyin `python manage.py runserver` qilib tekshirib tur.
 
+## Qilingan ishlar
+
+- `blog/models.py` — `Product` ga `is_popular` maydoni qo'shildi.
+- `blog/admin.py` — `is_popular` ro'yxatda chiqadi, filtrda bor, `list_editable` bilan galochka qo'yiladi.
+- `config/urls.py` — `static(settings.MEDIA_URL, ...)` qo'shildi.
+
+Quyida qolgan ishlar.
+
 ---
 
 ## 1-qism. Rasmlar (media)
 
 **1. `MEDIA_URL` va `MEDIA_ROOT` yo'q**
-Admin orqali yuklangan rasmlar loyiha ildizidagi `products/` papkaga tushib qolgan va git ga ham kirib ketgan.
-Yuklangan fayllar `media/` papkada turishi kerak.
+`config/urls.py` da `settings.MEDIA_URL` ishlatilyapti, lekin `settings.py` da u yozilmagan.
+Django o'zi `MEDIA_URL = '/'` qo'yadi, natijada saytdagi har qanday noto'g'ri manzil fayl sifatida qidiriladi.
+Admin orqali yuklangan rasmlar esa loyiha ildizidagi `products/` papkaga tushib, git ga kirib ketgan.
 
 `config/settings.py` da `STATICFILES_DIRS` dan keyin qo'sh:
 ```python
@@ -29,61 +38,29 @@ mv products media/
 Bazadagi yo'llar (`products/1.jpg`) o'zgarmaydi, chunki ular `MEDIA_ROOT` ga nisbatan yoziladi.
 `.gitignore` da `/media/` bor, shuning uchun endi rasmlar git ga tushmaydi.
 
-**3. Rasmlar brauzerda ochilmaydi**
-Django `runserver` da media fayllarni o'zi bermaydi, buni `urls.py` da yoqish kerak.
-
-`config/urls.py` ni shunday qil:
-```python
-from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib import admin
-from django.urls import path, include
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('blog.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-```
-
 Tekshir: brauzerda `http://127.0.0.1:8000/media/products/1.jpg` ochilib rasm chiqishi kerak.
 
 ---
 
-## 2-qism. "Popular" belgisi
+## 2-qism. Migratsiya
 
-**4. Qaysi mahsulot mashhur ekanini bilib bo'lmaydi**
-Bosh sahifada ikkita blok bor: "Popular products" va "Latest products".
-"Latest" — oxirgi qo'shilganlar (`created_at` bo'yicha). "Popular" uchun esa modelda maydon yo'q.
-
-`blog/models.py` da `Product` ichiga, `is_available` dan keyin qo'sh:
-```python
-    is_popular = models.BooleanField(default=False, verbose_name="Mashhurmi?")
-```
-Keyin:
+**3. `is_popular` uchun migratsiya yo'q**
+Modelga maydon qo'shilgan, lekin `makemigrations` qilinmagan. Bazada bu ustun yo'q,
+admin da mahsulotlar ro'yxatini ochsang xato chiqadi.
 ```
 python manage.py makemigrations
 python manage.py migrate
 ```
+`blog/migrations/` da `0003_product_is_popular.py` paydo bo'lishi kerak. Uni ham commit qil.
 
-**5. Admin da belgilashni qulay qil**
-`blog/admin.py` da `ProductAdmin` ni shunday qil:
-```python
-@admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'price', 'is_available', 'is_popular', 'created_at')
-    list_filter = ('category', 'is_available', 'is_popular')
-    list_editable = ('is_popular',)
-    search_fields = ('name', 'description')
-    prepopulated_fields = {'slug': ('name',)}
-```
-`list_editable` — ro'yxatning o'zida galochka qo'yish mumkin bo'ladi.
-Admin ga kirib, 4 ta mahsulotga "Mashhurmi?" galochkasini qo'y. Bir nechtasiga `Chegirmadagi narxi` ham yoz.
+Keyin admin ga kirib, 4 ta mahsulotga "Mashhurmi?" galochkasini qo'y.
+Bir nechtasiga `Chegirmadagi narxi` ham yoz.
 
 ---
 
 ## 3-qism. View
 
-**6. `index` view shablonga hech narsa bermayapti**
+**4. `index` view shablonga hech narsa bermayapti**
 `blog/views.py` ning tepasiga import qo'sh:
 ```python
 from .models import Product
@@ -107,7 +84,7 @@ def index(request):
 
 ## 4-qism. Shablon
 
-**7. "Popular products" bloki qo'lda yozilgan**
+**5. "Popular products" bloki qo'lda yozilgan**
 `templates/index.html` da `<section id="popular-products">` ichida 4 ta bir xil kartochka bor
 (`<!-- Product 1 -->` ... `<!-- Product 4 -->`). Hammasini o'chir, o'rniga bitta kartochkani `for` ichida yoz.
 
@@ -141,7 +118,7 @@ def index(request):
 - `floatformat:0` — narx `10000.00` emas, `10000` bo'lib chiqadi.
 - `{% empty %}` — ro'yxat bo'sh bo'lsa shu matn chiqadi.
 
-**8. "Latest products" bloki ham qo'lda yozilgan**
+**6. "Latest products" bloki ham qo'lda yozilgan**
 `<section id="latest-products">` ichida ham xuddi shunday qil. Kod bir xil, faqat birinchi qatorda:
 ```django
   {% for p in latest_products %}
@@ -151,6 +128,7 @@ def index(request):
 
 ## Tekshirish
 
+- Admin da mahsulotlar ro'yxati xatosiz ochiladi, "Mashhurmi?" galochkasi qo'yiladi.
 - Bosh sahifada "Popular products" da galochka qo'yilgan 4 ta mahsulot chiqadi.
 - "Latest products" da oxirgi qo'shilgan 4 ta mahsulot chiqadi.
 - Rasmlar ochiladi, kategoriya nomi chiqadi, chegirmasi borlarda eski narx ustidan chizilgan.
