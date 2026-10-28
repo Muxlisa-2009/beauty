@@ -6,14 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
-    <link rel="{% static 'icon'%}" type="icon" href="{% static 'assets/images/favicon.png ' %}" />
+    <link rel="icon" type="image/png" href="{% static 'assets/images/favicon.png' %}" />
     <title>{% block title %}Home page{% endblock %}</title>
 
-    <link rel="{% static 'preconnect'%}" href="{% static 'https://fonts.googleapis.com'%}">
-    <link rel="{% static 'preconnect'%}" href="{% static 'https://fonts.gstatic.com'%}" crossorigin>
-    <link href="{% static 'https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap'%}" rel="{% static 'stylesheet'%}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.css">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
@@ -45,21 +45,16 @@
               <ul class="flex justify-center space-x-4 text-white">
                   <li><a href="{% url 'index' %}" class="hover:text-secondary font-semibold">Home</a></li>
 
-                  <!-- Men Dropdown -->
-
-
                   <!-- Women Dropdown -->
-                  <li class="relative group" x-data="{ open: false }">
-                      <a @mouseover="open = true" @mouseleave="open = false" href="#" class="hover:text-secondary font-semibold flex items-center">
-                          Women
-                          <i :class="open ? 'fas fa-chevron-up ml-1 text-xs' : 'fas fa-chevron-down ml-1 text-xs'"></i>
+                   <li>
+                      <a href="{% url 'women' %}" class="hover:text-secondary font-semibold">
+                            Women
                       </a>
-                     
                   </li>
 
-                  <li><a href="#" class="hover:text-secondary font-semibold">Shop</a></li>
-                  <li><a href="#" class="hover:text-secondary font-semibold">404 page</a></li>
-                  <li><a href="#" class="hover:text-secondary font-semibold">Checkout</a></li>
+                  <li><a href="{% url 'shop' %}" class="hover:text-secondary font-semibold">Shop</a></li>
+                  <li><a href="{% url 'not_found' %}" class="hover:text-secondary font-semibold">404 page</a></li>
+                  <li><a href="{% url 'checkout' %}" class="hover:text-secondary font-semibold">Checkout</a></li>
               </ul>
             </nav>
 
@@ -69,7 +64,7 @@
                   class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Register</a>
               <a href="#"
                   class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
-              <div class="{% static 'relative group cart-wrapper'%}">
+              <div class="relative group cart-wrapper">
                   <a href="#" >
                       <img src="{% static 'images/cart-shopping.svg' %}" alt="Cart" class="h-6 w-6 group-hover:scale-120">
                   </a>
@@ -102,7 +97,7 @@
                       <a href="#" class="block text-center mt-4 border border-primary bg-primary hover:bg-transparent text-white hover:text-primary py-2 rounded-full font-semibold">Go to Cart</a>
                   </div>
               </div>
-              <a id="search-icon" href="{% static 'javascript:void(0);'%}'" class="text-white hover:text-secondary group">
+              <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-secondary group">
                   <img src="{% static 'images/search-icon.svg' %}" alt="Search"
                       class="h-6 w-6 transition-transform transform group-hover:scale-120">
               </a>
@@ -123,14 +118,14 @@
 
           <!-- Men Dropdown -->
           <li class="relative group" x-data="{ open: false }">
-              <a @click="open = !open; $event.preventDefault()" class="hover:text-secondary font-bold  py-2 flex justify-center items-center cursor-pointer">
+              <a @click="open = !open; $event.preventDefault()" class="hover:text-secondary font-bold py-2 flex justify-center items-center cursor-pointer">
                 <span>Men</span>
                 <span @click.stop="open = !open">
                     <i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i>
                 </span>
               </a>
               <ul class="mobile-dropdown-menu" x-show="open" x-transition class="space-y-2">
-                  <li><a href="#" class="hover:text-secondary font-bold block pt-2 pb-3">Shop Men</a></li>
+                  <li><a href="{% url 'shop' %}" class="hover:text-secondary font-bold block pt-2 pb-3">Shop Men</a></li>
                   <li><a href="#" class="hover:text-secondary font-bold block py-2">Men item 1</a></li>
                   <li><a href="#" class="hover:text-secondary font-bold block py-2">Men item 2</a></li>
                   <li><a href="#" class="hover:text-secondary font-bold block py-2">Men item 3</a></li>
@@ -138,20 +133,13 @@
           </li>
 
           <!-- Women Dropdown -->
-          <li class="relative group" x-data="{ open: false }">
-              <a @click="open = !open; $event.preventDefault()" class="hover:text-secondary font-bold py-2 flex justify-center items-center cursor-pointer">
-                    <span>Women</span>
-                    <span @click.stop="open = !open">
-                        <i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i>
-                    </span>
+          <li>
+              <a href="{% url 'women' %}" class="hover:text-secondary font-bold block py-2">
+                    Women
               </a>
-              <ul class="mobile-dropdown-menu" x-show="open" x-transition class="pl-4 space-y-2">
-                  <li><a href="#" class="hover:text-secondary font-bold block py-2">Shop Women</a></li>
-
-              </ul>
           </li>
 
-          <li><a href="#" class="hover:text-secondary font-bold block py-2">Shop</a></li>
+          <li><a href="{% url 'shop' %}" class="hover:text-secondary font-bold block py-2">Shop</a></li>
           <li><a href="#" class="hover:text-secondary font-bold block py-2">Product</a></li>
           <li><a href="#" class="hover:text-secondary font-bold block py-2">404 page</a></li>
           <li><a href="#" class="hover:text-secondary font-bold block py-2">Checkout</a></li>
@@ -165,8 +153,7 @@
               class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Cart -&nbsp;<span>5</span>&nbsp;items</a>
       </div>
       <!-- Search field -->
-      <div
-          class="  top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
+      <div class="top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
           <input type="text" class="w-full p-2 border border-gray-300 rounded"
               placeholder="Search for products...">
       </div>
@@ -184,7 +171,7 @@
             <div class="w-full sm:w-1/6 px-4 mb-8">
               <h3 class="text-lg font-semibold mb-4">Shop</h3>
               <ul>
-                <li><a href="#" class="hover:text-primary">Shop</a></li>
+                <li><a href="{% url 'shop' %}" class="hover:text-primary">Shop</a></li>
                 <li><a href="#" class="hover:text-primary">Women</a></li>
                 <li><a href="#" class="hover:text-primary">Men</a></li>
                 <li><a href="#" class="hover:text-primary">Shoes</a></li>
@@ -195,7 +182,7 @@
             <div class="w-full sm:w-1/6 px-4 mb-8">
               <h3 class="text-lg font-semibold mb-4">Pages</h3>
               <ul>
-                <li><a href="#" class="hover:text-primary">Shop</a></li>
+                <li><a href="{% url 'shop' %}" class="hover:text-primary">Shop</a></li>
                 <li><a href="#" class="hover:text-primary">Product</a></li>
                 <li><a href="#" class="hover:text-primary">Checkout</a></li>
                 <li><a href="#" class="hover:text-primary">404</a></li>
@@ -227,11 +214,11 @@
                   <a href="#" class="hover:text-primary">Instagram</a>
                 </li>
                 <li class="flex items-center mb-2">
-                  <img src="{% static 'images/social_icons/pinterest.svg' %}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                  <img src="{% static 'images/social_icons/pinterest.svg' %}" alt="Pinterest" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                   <a href="#" class="hover:text-primary">Pinterest</a>
                 </li>
                 <li class="flex items-center mb-2">
-                  <img src="{% static 'images/social_icons/youtube.svg' %}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                  <img src="{% static 'images/social_icons/youtube.svg' %}" alt="YouTube" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                   <a href="#" class="hover:text-primary">YouTube</a>
                 </li>
               </ul>
@@ -253,9 +240,8 @@
             <!-- Copyright and Links -->
             <div class="w-full lg:w-3/4 text-center lg:text-left mb-4 lg:mb-0">
               <p class="mb-2 font-bold">&copy; 2024 Your Company. All rights reserved by <a
-              href="{% static 'https://github.com/spacemadev'%}" target="_blank" style="color: green;">Maksim M</a> • Distributed by <a href="https://themewagon.com/" target="_blank"
+              href="https://github.com/spacemadev" target="_blank" style="color: green;">Maksim M</a> • Distributed by <a href="https://themewagon.com/" target="_blank"
         style="color: green;font-weight: bold;">ThemeWagon</a></p>
-          </p>
               <ul class="flex justify-center lg:justify-start space-x-4 mb-4 lg:mb-0">
                 <li><a href="#" class="hover:text-primary">Privacy Policy</a></li>
                 <li><a href="#" class="hover:text-primary">Terms of Service</a></li>
@@ -274,7 +260,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.js"></script>
-    <script src="{% static 'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js'%}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="{% static 'js/script.js' %}"></script>
 
 </body>
