@@ -133,7 +133,7 @@
         <div class="container mx-auto px-4">
             <h2 class="text-2xl font-bold mb-8">Latest products</h2>
      <div class="flex flex-wrap -mx-4">
-  {% for p in latest_product %}
+   {% for p in latest_products %}
     <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
       <div class="bg-white p-3 rounded-lg shadow-lg">
         <img src="{{ p.image.url }}" alt="{{ p.name }}" class="w-full object-cover mb-4 rounded-lg">

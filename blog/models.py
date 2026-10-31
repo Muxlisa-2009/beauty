@@ -45,3 +45,39 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Cart(models.Model):
+    # Agar foydalanuvchi ro'yxatdan o'tgan bo'lsa
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    # Ro'yxatdan o'tmagan mehmonlar uchun session ID
+    session_id = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        if self.user:
+            return f"Savat: {self.user.username}"
+        return f"Mehmon savati: {self.session_id}"
+
+    @property
+    def total_price(self):
+        # Savatdagi barcha mahsulotlarning umumiy narxi
+        return sum(item.total_price for item in self.items.all())
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey('Product',
+                                on_delete=models.CASCADE)  # Product modelingiz shu faylda yoki import qilingan bo'lishi kerak
+    quantity = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.name}"
+
+    @property
+    def total_price(self):
+        # Bitta mahsulot turi uchun umumiy narx (miqdor * narx)
+        price = self.product.discount_price if self.product.discount_price else self.product.price
+        return price * self.quantity
